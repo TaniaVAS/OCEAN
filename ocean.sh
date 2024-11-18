@@ -32,6 +32,9 @@ draw_middle_border() {
 draw_bottom_border() {
     echo -e "${CYAN}╚══════════════════════════════════════════════════════════════════════╝${RESET}"
 }
+print_telegram_icon() {
+    echo -e "          ${MAGENTA}${ICON_TELEGRAM} Подписывайтесь на наш Telegram!${RESET}"
+}
 
 # Логотип и информация
 display_ascii() {
