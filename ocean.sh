@@ -18,6 +18,7 @@ ICON_START="▶️"
 ICON_WALLET="💰"
 ICON_EXIT="❌"
 ICON_CHANGE_RPC="🔄"
+ICON_DELETE="🗑️"
 
 # Функции для рисования границ
 draw_top_border() {
@@ -34,9 +35,10 @@ draw_bottom_border() {
 
 # Логотип и информация
 display_ascii() {
-    echo -e "${CYAN}+-++-++-++-++-++-++-++-++-++-+${RESET}"
-    echo -e "${CYAN}|i||n||d||i||v||i||t||i||a||s|${RESET}"
-    echo -e "${CYAN}+-++-++-++-++-++-++-++-++-++-+${RESET}"
+    echo -e "${CYAN}   ____   _  __   ___    ____ _   __   ____ ______   ____   ___    ____${RESET}"
+    echo -e "${CYAN}  /  _/  / |/ /  / _ \  /  _/| | / /  /  _//_  __/  /  _/  / _ |  / __/${RESET}"
+    echo -e "${CYAN} _/ /   /    /  / // / _/ /  | |/ /  _/ /   / /    _/ /   / __ | _\ \  ${RESET}"
+    echo -e "${CYAN}/___/  /_/|_/  /____/ /___/  |___/  /___/  /_/    /___/  /_/ |_|/___/  ${RESET}"
     echo -e ""
     echo -e "${YELLOW}Подписывайтесь на Telegram: https://t.me/CryptalikBTC${RESET}"
     echo -e "${YELLOW}Подписывайтесь на YouTube: https://www.youtube.com/@Cryptalik${RESET}"
@@ -86,10 +88,11 @@ show_menu() {
     echo -e "    ${CYAN}5.${RESET} ${ICON_START} Запустить узел"
     echo -e "    ${CYAN}6.${RESET} ${ICON_WALLET} Просмотреть созданные кошельки"
     echo -e "    ${CYAN}7.${RESET} ${ICON_CHANGE_RPC} Изменить RPC"
+    echo -e "    ${CYAN}8.${RESET} ${ICON_DELETE} Удалить ноду"
     echo -e "    ${CYAN}0.${RESET} ${ICON_EXIT} Выйти"
     echo
     draw_bottom_border
-    echo -ne "    ${YELLOW}Введите ваш выбор [0-7]:${RESET} "
+    echo -ne "    ${YELLOW}Введите ваш выбор [0-8]:${RESET} "
     read choice
 }
 
@@ -156,6 +159,20 @@ start_node() {
     read -p "Нажмите Enter для возврата в главное меню..."
 }
 
+delete_node() {
+    echo -ne "${YELLOW}Введите номер узла для удаления:${RESET} "
+    read node_number
+    if docker ps -a | grep -q "ocean-node-$node_number"; then
+        echo -e "${RED}Удаление ноды $node_number...${RESET}"
+        docker-compose -f docker-compose$node_number.yaml down
+        rm -f docker-compose$node_number.yaml
+        echo -e "${GREEN}✅ Нода $node_number успешно удалена.${RESET}"
+    else
+        echo -e "${RED}Нода с номером $node_number не существует.${RESET}"
+    fi
+    read -p "Нажмите Enter для возврата в главное меню..."
+}
+
 change_rpc() {
     echo -ne "${YELLOW}Введите новый RPC URL:${RESET} "
     read new_rpc
@@ -175,6 +192,7 @@ while true; do
         5) start_node ;;
         6) echo "💰 Просмотр кошельков пока не реализован." ;;
         7) change_rpc ;;
+        8) delete_node ;;
         0) exit ;;
         *) echo -e "${RED}Неверный выбор!${RESET}" ;;
     esac
