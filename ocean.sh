@@ -53,6 +53,26 @@ display_ascii() {
     echo -e ""
 }
 
+# Функция для получения IP-адреса
+get_ip_address() {
+    ip_address=$(hostname -I | awk '{print $1}')
+    if [[ -z "$ip_address" ]]; then
+        echo -ne "${YELLOW}Не удалось автоматически определить IP-адрес.${RESET}"
+        echo -ne "${YELLOW} Пожалуйста, введите IP-адрес:${RESET} "
+        read ip_address
+    fi
+    echo "$ip_address"
+}
+
+show_menu() {
+    clear
+    draw_top_border
+    display_ascii
+    draw_middle_border
+    print_telegram_icon
+    echo -e "    ${BLUE}Криптан, подпишись!: ${YELLOW}https://t.me/indivitias${RESET}"
+    draw_middle_border
+
  # Отображение текущей директории и IP-адреса
     current_dir=$(pwd)
     ip_address=$(get_ip_address)
